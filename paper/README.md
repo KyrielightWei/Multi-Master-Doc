@@ -11,3 +11,4 @@
 |   Maintaining Cache Coherency for B +  Tree Indexes in a Shared Disks Cluster  | wei | （总结文件名 or 简要总结） |
 |   Distributed Lock Management with RDMA  | zhang | 正在看... |
 |   多核cache/Cache-Conscious Concurrency Control of Main-Memory Indexes on Shared-Memory Multiprocessor Systems   |  zhang |  文章提出了多核访问主存索引的乐观并发控制方式，采用多版本，有点类似于RAC里面的读，具体总结在 summary 中。  |
+|   分布式cache/Cache Coherency in Oracle Parallel Server   | zhang  | 这篇文章就一页，简单提了Oracle共享存储的主要优势,以及Oracle Parallel Server（OPS）怎样解决读写冲突的（和RAC差不多，甚至没有共享缓存，脏页先刷盘才能读），最后提了一下hash locking 和 细粒度锁的区别及使用场景 |
