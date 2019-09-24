@@ -10,7 +10,7 @@
 
 
 #### 下图是冷启动时，四个CPU核并行遍历内存索引的例子。
-![figure1](https://github.com/PokemonWei/Multi-Master-Doc/tree/zhang-dev/summary/images/Cache-Conscious%20Concurrency%20Control%20of%20Main-Memory%20Indexes%20on%20Shared-Memory%20Multiprocessor%20Systems/figure1.png)
+![figure1](https://github.com/PokemonWei/Multi-Master-Doc/blob/zhang-dev/summary/images/Cache-Conscious%20Concurrency%20Control%20of%20Main-Memory%20Indexes%20on%20Shared-Memory%20Multiprocessor%20Systems/figure1.png)
 
 n1-n7是7个数据块，图中索引共四个路径，每个CPU依次遍历一条路径（因为都需要根节点的锁，所以根节点不能并发访问）。p1读入n1、n2、n4之后，p2也读了同样的n1、n2,那么需要将p1核内缓存 n1、n2失效，同理，后面的核读相应数据时，也需要将前面部分核内部分数据缓存失效。这就是开始将的一致性缓存未命中。
 
