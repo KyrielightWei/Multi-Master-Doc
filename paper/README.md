@@ -10,7 +10,7 @@
 |  ----  | ----  | ----  |
 |   Maintaining Cache Coherency for B +  Tree Indexes in a Shared Disks Cluster  | wei | （总结文件名 or 简要总结） |
 |   RDMA-database/Distributed Lock Management with RDMA  | zhang | 正在看... |
-|   多核cache/Cache-Conscious Concurrency Control of Main-Memory Indexes on Shared-Memory Multiprocessor Systems   |  zhang |  在修改  |
+|   多核cache/Cache-Conscious Concurrency Control of Main-Memory Indexes on Shared-Memory Multiprocessor Systems   |  zhang |  文章针对多核共享内存的架构，提出了新的并发控制方法 latch-free index traversal (OLFIT) ，这种方法能够有效减少 L2 缓存上（可以直接理解为核内缓存）的 cache miss。总结在summary/Cache-Conscious Concurrency Control of Main-Memory Indexes on Shared-Memory  |
 |   分布式cache/Cache Coherency in Oracle Parallel Server   | zhang  | 这篇文章就一页，简单提了Oracle共享存储的主要优势,以及Oracle Parallel Server（OPS）怎样解决读写冲突的（和RAC差不多，甚至没有共享缓存，脏页先刷盘才能读），最后提了一下hash locking 和 细粒度锁的区别及使用场景 |
 |   分布式cache/Cache Consistencyand Concurrency Control in a ClientServer DBMS Architecture   | zhang  |  这篇文章主要比较了五种并发控制方案的性能，架构确实讲的是多个客户端连接一个服务端的场景，cache存在于client端，事务执行也在客户端。但是，并没有太多的cache一致性细节，Introductino第二段就讲明了论文实验在实现时，并发控制就已经包含了一致性检查，且直言下文会交叉使用"并发控制"和"cache一致性"这两个术语，后面整篇论文没再提一致性是怎么做的。第2节 第三段的假设交代，client缓存在使用前被拉到client,然后在缓存驱逐/事务提交时被刷到server，个人理解相当于在存储层提供了这个一致性保障。  |
 |   分布式cache/Cache Fusion Extending Shared-Disk Clusters with Shared Caches   | zhang | 2001年oracle发表在VLDB上的文章，较详细地描述了RAC 的读写过程以及故障恢复，篇幅不长，相当于回顾下前期调研的结果，没有过多的总结。 |  
