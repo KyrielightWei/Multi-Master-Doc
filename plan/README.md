@@ -8,7 +8,6 @@
 |  周期名称   | 内容  |  预期成果  |
 | ----  | ----  | ----  |
 | 论文阅读与总结 | 分布式或单机cache一致性相关的论文 | 论文总结文档 |
-| 网络通信库入门  | 调研网络通信方式，学习libevent的使用，记录libevent通信API | linux网络通信调研报告、libevent API文档以及libevent通信demo、libevent在alisql中的应用报告 |
-| 进程通信入门  | 以共享内存为主，学习进程通信的方式 | 共享内存进程通信demo |
-| 通信方式对比测试  | 共享内存、libevent、grpc、简单socket性能对比实验 | 网络通信对比实验方案，通信方式性能对比报告(包含应用场景建议，性能变化原因等要素) |
+| 网络通信库入门  | 调研网络通信方式，学习libevent的使用，记录libevent通信API | linux网络通信调研报告、libevent API文档以及libevent通信demo |
+| MySQL文件IO代码阅读 | MySQL文件IO通用接口| MySQL 文件IO接口和刷盘工作流程报告 |
 | Buffer Pool代码阅读  | MySQL缓冲区架构 | MySQL 缓冲区架构文档（内含工作流程与模块交流流程） |
