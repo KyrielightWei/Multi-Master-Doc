@@ -1,0 +1,29 @@
+./ibdata1                       // 系统表空间
+/home/zhangrongrong/mysql/data/xb_doublewrite   // 双写缓冲对应的文件
+./ib_logfile0                   // redo 日志文件
+./ib_logfile1
+./undo_001                      // undo 日志文件
+./undo_002
+./ibtmp1                        // 临时文件
+./#innodb_temp/temp_1.ibt
+./#innodb_temp/temp_2.ibt
+mysql.ibd
+./sys/sys_config.ibd
+./tpcc/CUSTOMER.ibd             // 以下都是 tpcc 库的表空间
+./tpcc/DISTRICT.ibd
+./tpcc/HISTORY.ibd
+./tpcc/ITEM.ibd
+./tpcc/NEW_ORDER.ibd
+./tpcc/OORDER.ibd
+./tpcc/OORDER.ibd
+./tpcc/ORDER_LINE.ibd
+./tpcc/STOCK.ibd
+./tpcc/WAREHOUSE.ibd
+./tpcc/CUSTOMER.ibd
+./tpcc/HISTORY.ibd
+./tpcc/ORDER_LINE.ibd
+./tpcc/STOCK.ibd
+./tpcc/ITEM.ibd
+./tpcc/DISTRICT.ibd
+./tpcc/NEW_ORDER.ibd
+./tpcc/WAREHOUSE.ibd
