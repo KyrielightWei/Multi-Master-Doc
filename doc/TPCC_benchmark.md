@@ -16,7 +16,7 @@ TPC-C 模拟应用环境：在线订单处理系统。假设有一个大型商�
 9张表
 
 
-![TPC-C商业模型ER图](https://www.ibm.com/developerworks/cn/data/library/db-cn-tpc-ctest/img001.png)
+![TPC-C商业模型ER图](https://upload.wikimedia.org/wikipedia/commons/6/63/Sch%C3%A9ma_Datab%C3%A1ze_metody_TPC-C.png)
 
 **仓库数量w是可变参数，可以通过改变w的值来获得不同测试效果。**
 
