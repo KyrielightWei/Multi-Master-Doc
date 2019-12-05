@@ -163,14 +163,31 @@ int get_string_length();
 
 ```c++
 void parse(const char * json_str,char * buffer,int size);
+```
 
+`parse`函数的作用是解析json字符串，将其放入指定的buffer中，buffer的大小必须足够。
+
+简单的可以使用json字符串的长度作为buffer的参考大小。
+
+实际大小要比json字符串的长度要小一些，因为buffer中只存value和指针指向的数据，不存key。
+
+#### 获取内存对象
+
+```c++
 char * get_packet_header_ptr();
 int get_packet_header_size();
+
 char * get_packet_item_ptr(int i);
 int get_packet_item_size(int i);
+
 char * get_packet_item_ptr(const char * key);
 int get_packet_item_size(const char * key);
 ```
 
+获取内存对象的函数有三类，统一的都是获取一个指针和指针指向的值的大小，指针指向的对象位于`parse`函数中的buffer数组中。三类函数分别是：
 
+1. 获取packet头信息的函数
+2. 获取packet项的函数，以序号为参数，序号由1开始（0指向header），与写入json字符串的顺序相同
+3. 获取packet项的函数，以key为参数
 
+此处不需要获得指针注释的函数，因为在解析时，已经将指针修改为指向buffer数组中拷贝而来的对象，将获得的项指针转换为对应的类型即可使用对象。
