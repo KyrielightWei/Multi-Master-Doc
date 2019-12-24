@@ -16,11 +16,45 @@
 
 ## 设计目标
 
-远程IO的RPC需要
+远程IO的RPC需求
 
+cache远程沟通的需求
 
+##  消息管理（上层抽象）
 
-## 主要模块
+libevent库是基于操作系统本身的socket编程借口封装的网络库，只是增加了异步回调与socket缓冲区管理的功能。在同一个项目中定义多种网络数据包处理的代码的逻辑，无疑会降低代码的可读性和正确性。因此，我们需要对libevnt库进行更高层的抽象，以统一的代码逻辑管理项目中的网络连接与数据包的接收、发送。
+
+在我们的实现中，数据包被抽象为消息的形式，使用JSON格式的配置文件记录host的名称与消息的类型。
+
+### MessageError
+
+这是一个命名空间，该命名空间中包含了消息错误代码的定义以及与之对应的错误提示字符串的定义。
+
+### EventMessage
+
+```c++
+const char  * group_name;
+const char  * mess_type;
+const char  * send_host_name;
+const char  * recive_host_name;
+const char  * message;
+uint32_t message_size;
+MessageError::EventMessageErrorNo error_no;
+```
+
+EventMessage类提供了以上七种公有成员变量，用于访问消息的内容：
+
++ 消息组名称：消息组是指将消息按照功能模块划分，例如远程IO与页传输两个组。不同的消息组由不同的线程负责消息读写和回调函数调用。因此，也可以为了消息处理的并发度而增加消息组的数量。
++ 消息类型：消息类型是消息组中的分类，即使是一个消息组中的消息，也可以分为不同的类型，由不同的函数处理。例如远程IO中的消息类型可以分为open、read、write等等。
++ 发送者名称：发送者的host名称，用于标志消息的发送者。
++ 接收者名称：接收者的host名称，用于标志消息的接收者。
++ 消息内容的指针与大小：指针指向消息的内容，消息的形式是char数组，`message_size`表示char数组的长度。
++ 错误标志：处理消息时发生错误，会将错误标志记录在`error_no`,使用MessageError命名空间中的函数可以获取错误标志对应的错误信息。
+
+内部实现上使用
+
+## 底层模块
+
 ### Libevent Handle
 
 > 头文件位置：multi_net_io/include/libevent_handle.h
