@@ -22,13 +22,46 @@ cache远程沟通的需求
 
 ##  消息管理（上层抽象）
 
-libevent库是基于操作系统本身的socket编程借口封装的网络库，只是增加了异步回调与socket缓冲区管理的功能。在同一个项目中定义多种网络数据包处理的代码的逻辑，无疑会降低代码的可读性和正确性。因此，我们需要对libevnt库进行更高层的抽象，以统一的代码逻辑管理项目中的网络连接与数据包的接收、发送。
+Libevent库本身只提供了异步回调函数响应事件的机制，其网络传输机制依赖于操作系统的socket网络，不支持多线程，接口相当于复杂。想要将libevent应用到项目中，需要进行上层封装。
 
-在我们的实现中，数据包被抽象为消息的形式，使用JSON格式的配置文件记录host的名称与消息的类型。
+第一步，我们将libevent封装成较为符合思维习惯的LibeventHandle，提供connection管理、线程安全、异步回调、同步收发数据包的功能。
+
+第二步，将数据包封装为消息的形式，为其添加头部，标志消息类型、发送者、接受者等信息。消息可以分为不同的组，每一个消息组由独立的LibeventHandle处理。因此，不同的消息组由不同的线程负责运行回调函数，实现并发网络处理。启动时读取JSON格式的配置文件获取host的名称与消息的类型。
+
+总体的模块结构如下图：
+
+![结构图](../images/EventMessageHandle.png)
 
 ### MessageError
 
 这是一个命名空间，该命名空间中包含了消息错误代码的定义以及与之对应的错误提示字符串的定义。
+
+```c++
+namespace MessageError
+{
+    extern const char *EVENT_ERROR_STRING[];
+    enum EventMessageErrorNo
+    {
+        SUCCESS = 0,
+        INCOMPLETE_MESSAGE = 1,
+        GROUP_NOT_FOUND=2,
+        MESS_TYPE_NOT_FOUND = 3,
+        NONE_UNPROCESSED_MESSAGE=4,
+        INVALID_HOST=5
+    };
+
+    const char *getEventErrorStr(EventMessageErrorNo no);
+} // namespace MessageError
+```
+
+主要用于提示读写消息过程中产生的错误：
+
++ SUCCESS 无错误
++ INCOMPLETE_MESSAGE 发送或者接受所需要的信息不足
++ GROUP_NOT_FOUND 没有指定的消息组
++ MESS_TYPE_NOT_FOUND 没有指定的消息类型
++ NONE_UNPROCESSED_MESSAGE 没有未处理（可读）的消息
++  INVALID_HOST 错误的host名称，找不到对应的ip与端口
 
 ### EventMessage
 
@@ -51,7 +84,50 @@ EventMessage类提供了以上七种公有成员变量，用于访问消息的�
 + 消息内容的指针与大小：指针指向消息的内容，消息的形式是char数组，`message_size`表示char数组的长度。
 + 错误标志：处理消息时发生错误，会将错误标志记录在`error_no`,使用MessageError命名空间中的函数可以获取错误标志对应的错误信息。
 
-内部实现上使用
+内部实现上使用std::string作为动态buffer存储指针指向的值，便于直接网络传输。
+
+```c++
+void  prepare_send(const char * g_name,const char * m_type,
+        const char * r_host,const char * mess,uint32_t mess_size);
+void  prepare_recive(const char * g_name,const char * msg_type);
+void  clear();
+```
+
+`prepare_send`、`prepare_recive`两个函数分别用于发送和接收前初始化消息。
+
+`clear()`清空对象中的所有状态信息。
+
+### EventMessageHandle
+
+```c++
+ // Public API
+    //-------------------------------------------------------------------------------------------------------------------------
+    /*init or free handle object*/
+    bool init_handle(const char *host_config_path, const char *mess_config_path);
+    bool free_handle();
+    bool is_free();
+    bool is_init();
+
+    //register handle function about message
+    bool register_recive_handler(const char * group_name, const char * mess_type,EventMessageHandle_RECIVE_CB cb,void * arg);
+
+    //recive message
+    int readMessage(EventMessage *mess); //message size
+
+	//get unprocessed message count
+	uint32_t get_unprocessed_message_count(const char * group_name,const char * 	mess_type);
+
+    //send message
+    int sendMessage(EventMessage *mess);
+    //-------------------------------------------------------------------------------------------------------------------------
+
+```
+
++ 初始化与销毁函数不用多说，对象的常规配置
++ `register_recive_handler`注册一个指定消息组指定消息类型的回调函数
++ `readMessage`读一个指定组指定类型的消息
++ `get_unprocessed_message_count`获取未处理的消息的数量
++ `sendMessage`发送一个消息
 
 ## 底层模块
 
